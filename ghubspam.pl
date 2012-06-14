@@ -28,11 +28,11 @@ sub ghubspam_process_message {
 	my ($server, $msg, $target) = @_;
 
 	return unless $target =~ /^#(wijs|catena|lolwut)/;
-	return unless $msg =~ m/https:\/\/github\.com\/([^\/]+)\/([^\/]+)/;
+	return unless $msg =~ m/https:\/\/github\.com\/([^\/]+)\/([^\/]+)(?:\/commit\/([^\/]+))?/;
 
 	my $user = $1;
 	my $repo = $2;
-
+	my $treeish = $3;
 	my $json_url = "https://api.github.com/repos/$user/$repo";
 	my $json = get($json_url);
 	return unless $json;
@@ -40,11 +40,16 @@ sub ghubspam_process_message {
 	my $message = "Repository: \"$summary->{name}: $summary->{description}\"";
 	$server->command("msg $target $message");
 
-	my $json_url = "https://api.github.com/repos/$user/$repo/commits/HEAD";
+	my $json_url = $treeish
+		? "https://api.github.com/repos/$user/$repo/commits/$treeish"
+		: "https://api.github.com/repos/$user/$repo/commits/HEAD";
 	my $json = get($json_url);
 	return unless $json;
 	my $commit = decode_json($json);
-	my $message = "Latest commit: \"$commit->{commit}->{message}\" by $commit->{commit}->{author}->{name}";
+	my $message_start = $treeish
+		? "Commit " . substr($commit->{sha}, 0, 7)
+		: "Latest commit";
+	my $message = "$message_start: \"$commit->{commit}->{message}\" by $commit->{commit}->{author}->{name}";
 	$server->command("msg $target $message");
 }
 
