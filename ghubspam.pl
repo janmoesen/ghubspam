@@ -1,5 +1,5 @@
 # == WHAT
-# Show the latest commit for a GitHub repository.
+# Show the description and the latest (or specified) commit for a GitHub repository.
 #
 # == WHO
 # Jan Moesen, 2012
@@ -19,7 +19,7 @@ $VERSION = '0.1';
 %IRSSI = (
 	authors     => 'Jan Moesen',
 	name        => 'Ghubspam',
-	description => 'Show the latest commit for a GitHub repository.',
+	description => 'Show the description and the latest (or specified) commit for a GitHub repository.',
 	license     => 'GPL',
 	url         => 'http://jan.moesen.nu/',
 );
