@@ -37,7 +37,9 @@ sub ghubspam_process_message {
 	my $json = get($json_url);
 	return unless $json;
 	my $summary = decode_json($json);
-	my $message = "Repository: \"$summary->{name}: $summary->{description}\"";
+	my $description = $summary->{description};
+	$description =~ s/\n.*//g;
+	my $message = "Repository: \"$summary->{name}: $description\"";
 	$server->command("msg $target $message");
 
 	my $json_url = $treeish
@@ -46,10 +48,12 @@ sub ghubspam_process_message {
 	my $json = get($json_url);
 	return unless $json;
 	my $commit = decode_json($json);
+	my $commit_message = $commit->{commit}->{message};
+	$commit_message =~ s/\n.*//g;
 	my $message_start = $treeish
 		? "Commit " . substr($commit->{sha}, 0, 7)
 		: "Latest commit";
-	my $message = "$message_start: \"$commit->{commit}->{message}\" by $commit->{commit}->{author}->{name}";
+	my $message = "$message_start: \"$commit_message\" by $commit->{commit}->{author}->{name}";
 	$server->command("msg $target $message");
 }
 
