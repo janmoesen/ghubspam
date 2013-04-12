@@ -28,7 +28,7 @@ sub ghubspam_process_message {
 	my ($server, $msg, $target) = @_;
 
 	return unless $target =~ /^#(wijs|catena|lolwut)/;
-	return unless $msg =~ m/https:\/\/github\.com\/([^\/]+)\/([^\/]+)(?:\/commit\/([^\/]+))?/;
+	return unless $msg =~ m/https:\/\/github\.com\/([^\/]+)\/([^\/]+)(?:\/commit\/([^\/]+)|$)/;
 
 	my $user = $1;
 	my $repo = $2;
