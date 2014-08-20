@@ -27,7 +27,7 @@ $VERSION = '0.1';
 sub ghubspam_process_message {
 	my ($server, $msg, $target) = @_;
 
-	return unless $target =~ /^#(catena|lolwut)/;
+	return unless $target =~ /^#(fronteers|catena|lolwut)/;
 	return unless $msg =~ m/https:\/\/github\.com\/([^\/]+)\/([^\/]+)(?:\/commit\/([^\/]+)|$)/;
 
 	my $user = $1;
